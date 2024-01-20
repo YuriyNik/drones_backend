@@ -8,14 +8,15 @@ import jakarta.persistence.*;
 public class DroneMedication {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "drone_id", referencedColumnName = "serial_number")
+    @JoinColumn(name = "drone_serial_number", referencedColumnName = "serial_number")
     private Drone drone;
 
     @ManyToOne
-    @JoinColumn(name = "medication_id", referencedColumnName = "code")
+    @JoinColumn(name = "medication_code", referencedColumnName = "code")
     private Medication medication;
 
     public DroneMedication(Long id,Drone drone, Medication medication) {
@@ -23,8 +24,33 @@ public class DroneMedication {
         this.drone = drone;
         this.medication = medication;
     }
+    public DroneMedication(Drone drone, Medication medication) {
+        this.drone = drone;
+        this.medication = medication;
+    }
 
     public DroneMedication() {
 
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Drone getDroneSerialNumber() {
+        return drone;
+    }
+
+    public Medication getMedicationCode() {
+        return medication;
+    }
+
+    @Override
+    public String toString() {
+        return "DroneMedication{" +
+                "id=" + id +
+                ", drone=" + drone +
+                ", medication=" + medication +
+                '}';
     }
 }

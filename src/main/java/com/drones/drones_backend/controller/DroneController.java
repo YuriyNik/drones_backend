@@ -19,9 +19,9 @@ public class DroneController {
         return droneService.registerDrone(drone);
     }
 
-    @PostMapping("/{serialNumber}/loadMedication")
-    public void loadMedication(@PathVariable String serialNumber, @RequestBody Medication medication) {
-        droneService.loadMedication(serialNumber, medication);
+    @PostMapping("/{serialNumber}/loadMedication/{medicationCode}")
+    public void loadMedication(@PathVariable String serialNumber, @PathVariable String medicationCode) {
+        droneService.loadMedication(serialNumber, medicationCode);
     }
 
     @GetMapping("/{serialNumber}/loadedMedications")
