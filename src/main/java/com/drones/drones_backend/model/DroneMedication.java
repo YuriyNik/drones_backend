@@ -11,7 +11,7 @@ public class DroneMedication {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "drone_id", referencedColumnName = "serialNumber")
+    @JoinColumn(name = "drone_id", referencedColumnName = "serial_number")
     private Drone drone;
 
     @ManyToOne
@@ -22,5 +22,9 @@ public class DroneMedication {
         this.id = id;
         this.drone = drone;
         this.medication = medication;
+    }
+
+    public DroneMedication() {
+
     }
 }
