@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RepositoryTest {
 
     @Autowired
-    DronRepository dronRepository;
+    DroneRepository droneRepository;
     @Autowired
     MedicationRepository medicationRepository;
     @Autowired
@@ -24,9 +24,9 @@ class RepositoryTest {
 
     @Test
     public void testDronSaveAndFind() {
-         dronRepository.save(drone);
+         droneRepository.save(drone);
 
-        Drone found = dronRepository.findById(drone.getSerialNumber()).orElse(null);
+        Drone found = droneRepository.findById(drone.getSerialNumber()).orElse(null);
         assertNotNull(found);
         System.out.println(found);
         // More assertions based on drone properties

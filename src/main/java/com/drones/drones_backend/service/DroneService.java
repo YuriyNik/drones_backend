@@ -3,7 +3,7 @@ package com.drones.drones_backend.service;
 import com.drones.drones_backend.model.Drone;
 import com.drones.drones_backend.model.DroneMedication;
 import com.drones.drones_backend.model.Medication;
-import com.drones.drones_backend.repository.DronRepository;
+import com.drones.drones_backend.repository.DroneRepository;
 import com.drones.drones_backend.repository.DroneMedicationRepository;
 import com.drones.drones_backend.repository.MedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +15,19 @@ import java.util.stream.Collectors;
 @Service
 public class DroneService {
     @Autowired
-    DronRepository dronRepository;
+    DroneRepository droneRepository;
     @Autowired
     MedicationRepository medicationRepository;
     @Autowired
     DroneMedicationRepository droneMedicationRepository;
 
     public Drone registerDrone(Drone drone) {
-        dronRepository.save(drone);
+        droneRepository.save(drone);
         return drone;
     }
 
     public void loadMedication(String droneSerialNumber, String medicationCode) {
-        Optional<Drone> drone = dronRepository.findById(droneSerialNumber);
+        Optional<Drone> drone = droneRepository.findById(droneSerialNumber);
         Optional<Medication> medication = medicationRepository.findById(medicationCode);
         if (drone.isEmpty() || medication.isEmpty()) {
             return;
@@ -59,11 +59,11 @@ public class DroneService {
     }
 
     public List<Drone> getAvailableDrones() {
-        return dronRepository.findAll();
+        return droneRepository.findAll();
     }
 
     public int getDroneBatteryLevel(String droneSerialNumber) {
-        Optional<Drone> drone = dronRepository.findById(droneSerialNumber);
+        Optional<Drone> drone = droneRepository.findById(droneSerialNumber);
       return drone.map(Drone::getBatteryCapacity).orElse(-1);
     }
 
