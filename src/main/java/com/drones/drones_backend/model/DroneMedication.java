@@ -37,11 +37,11 @@ public class DroneMedication {
         return id;
     }
 
-    public Drone getDroneSerialNumber() {
+    public Drone getDrone() {
         return drone;
     }
 
-    public Medication getMedicationCode() {
+    public Medication getMedication() {
         return medication;
     }
 

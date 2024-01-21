@@ -27,15 +27,35 @@ public class DroneService {
     }
 
     public void loadMedication(String droneSerialNumber, String medicationCode) {
-     //   DroneMedication droneMedication = new DroneMedication(droneSerialNumber, medicationCode);
-     //   droneMedicationList.add(droneMedication);
+        Optional<Drone> drone = dronRepository.findById(droneSerialNumber);
+        Optional<Medication> medication = medicationRepository.findById(medicationCode);
+        if (drone.isEmpty() || medication.isEmpty()) {
+            return;
+        }
+        Drone currentDrone = drone.get();
+        // Check if drone's battery level is below 25%
+        if (currentDrone.getBatteryCapacity() < 25) {
+            throw new IllegalStateException("Drone battery level too low for loading");
+        }
+        // Check if the drone can carry the additional weight
+        double totalWeight = droneMedicationRepository.findByDroneSerialNumber(droneSerialNumber)
+                .stream()
+                .mapToDouble(dm -> dm.getMedication().getWeight())
+                .sum() + medication.get().getWeight();
+        System.out.println("totalWeight="+totalWeight);
+        if (totalWeight > currentDrone.getWeightLimit()) {
+            throw new IllegalStateException("Drone cannot carry the additional weight");
+        }
+        DroneMedication droneMedication = new DroneMedication(drone.get(), medication.get());
+        droneMedicationRepository.save(droneMedication);
+        System.out.println("loadMedication="+droneMedication);
     }
 
     public List<Medication> getLoadedMedications(String droneSerialNumber) {
-//        List<DroneMedication> filteredList = droneMedicationRepository.findBy()
-
-        return null;
-
+        return droneMedicationRepository.findByDroneSerialNumber(droneSerialNumber)
+                .stream()
+                .map(DroneMedication::getMedication)
+                .collect(Collectors.toList());
     }
 
     public List<Drone> getAvailableDrones() {
