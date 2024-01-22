@@ -25,7 +25,28 @@ public class DroneService {
         droneRepository.save(drone);
         return drone;
     }
+    public Map<String, Integer> getMedicationCountByDrone() {
+        // Fetch all DroneMedication records
+        List<DroneMedication> droneMedications = droneMedicationRepository.findAll();
 
+        // Map to keep track of medication count per drone
+        Map<String, Integer> medicationCountByDrone = new HashMap<>();
+
+        for (DroneMedication dm : droneMedications) {
+            String droneSerial = dm.getDrone().getSerialNumber();
+            medicationCountByDrone.put(droneSerial, medicationCountByDrone.getOrDefault(droneSerial, 0) + 1);
+        }
+
+        // Return the map ordered by medication count in descending order
+        return medicationCountByDrone.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new));
+    }
+//todo get rid of exceptions - implement errors here and on controller level
     public void loadMedication(String droneSerialNumber, String medicationCode) {
         Optional<Drone> drone = droneRepository.findById(droneSerialNumber);
         Optional<Medication> medication = medicationRepository.findById(medicationCode);
@@ -38,12 +59,7 @@ public class DroneService {
             throw new IllegalStateException("Drone battery level too low for loading");
         }
         // Check if the drone can carry the additional weight
-        double totalWeight = droneMedicationRepository.findByDroneSerialNumber(droneSerialNumber)
-                .stream()
-                .mapToDouble(dm -> dm.getMedication().getWeight())
-                .sum() + medication.get().getWeight();
-        System.out.println("totalWeight="+totalWeight);
-        if (totalWeight > currentDrone.getWeightLimit()) {
+        if (getTotalLoadedWeight(droneSerialNumber)+ medication.get().getWeight() > currentDrone.getWeightLimit()) {
             throw new IllegalStateException("Drone cannot carry the additional weight");
         }
         DroneMedication droneMedication = new DroneMedication(drone.get(), medication.get());
@@ -59,8 +75,24 @@ public class DroneService {
     }
 
     public List<Drone> getAvailableDrones() {
-        return droneRepository.findAll();
+        List<Drone> allDrones = droneRepository.findAll();
+        return allDrones.stream()
+                .filter(this::isDroneAvailableForLoading)
+                .collect(Collectors.toList());
     }
+    private double getTotalLoadedWeight(String serialNumber){
+        return droneMedicationRepository.findByDroneSerialNumber(serialNumber)
+                .stream()
+                .mapToDouble(dm -> dm.getMedication().getWeight())
+                .sum();
+    }
+    private boolean isDroneAvailableForLoading(Drone drone) {
+        if (drone.getBatteryCapacity() < 25) {
+            return false; // Drone battery is below 25%, so it's not available
+        }
+        return getTotalLoadedWeight(drone.getSerialNumber()) < drone.getWeightLimit();
+    }
+
 
     public int getDroneBatteryLevel(String droneSerialNumber) {
         Optional<Drone> drone = droneRepository.findById(droneSerialNumber);

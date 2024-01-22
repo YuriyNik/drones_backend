@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "medications")
 public class Medication {
-
+//todo implement data validation
     @Id
   //  @Pattern(regexp = "^[A-Z0-9_]+$")
     private String code;

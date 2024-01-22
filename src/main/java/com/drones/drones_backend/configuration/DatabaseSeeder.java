@@ -24,7 +24,7 @@ public class DatabaseSeeder {
         seedDronesTable();
         seedMedicationsTable();
     }
-
+//todo pressed medication loading
     private void seedDronesTable() {
         if (droneRepository.count() == 0) {
             for (int i = 0; i <10 ; i++) {

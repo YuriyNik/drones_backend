@@ -6,6 +6,7 @@ import com.drones.drones_backend.service.DroneService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/drones")
@@ -38,6 +39,12 @@ public class DroneController {
     public int getBatteryLevel(@PathVariable String serialNumber) {
         return droneService.getDroneBatteryLevel(serialNumber);
     }
+    @GetMapping("/medication-count")
+    public Map<String, Integer> getMedicationCountByDrone() {
+        return droneService.getMedicationCountByDrone();
+    }
+
+    //todo implement event history
 /*
     @GetMapping("/{serialNumber}/eventHistory")
     public List<EventLog> getEventHistory(@PathVariable String serialNumber) {
