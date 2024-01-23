@@ -4,16 +4,16 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "medications")
 public class Medication {
-//todo implement data validation
     @Id
-  //  @Pattern(regexp = "^[A-Z0-9_]+$")
+    @Pattern(regexp = "^[A-Z0-9_]+$", message = "allowed only upper case letters, underscore and numbers")
     private String code;
 
- //   @Pattern(regexp = "^[a-zA-Z0-9_-]+$")
+    @Pattern(regexp = "^[a-zA-Z0-9_-]+$", message = "allowed only letters, numbers, ‘-‘, ‘_’")
     private String name;
     @Column(name = "weight", nullable = false)
     private int weight;
