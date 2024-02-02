@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
 
 @Entity
 @Table(name = "drones")
@@ -15,10 +16,12 @@ public class Drone {
     @Column(name = "model", nullable = false)
     private DroneModel model;
 
-    @Column(name = "weightLimit", length = 500,nullable = false)
+    @Column(name = "weightLimit", nullable = false)
+    @Max(500)
     private int weightLimit;
 
-    @Column(name = "batteryCapacity", length = 100,nullable = false)
+    @Column(name = "batteryCapacity", nullable = false)
+    @Max(100)
     private int batteryCapacity;
 
     @Column(name = "state", nullable = false)
