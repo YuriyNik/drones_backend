@@ -65,6 +65,7 @@ class RepositoryTest {
     @Test
     public void setEventLogRepository(){
         droneRepository.save(drone);
+        droneRepository.flush();
         EventLog eventLog =
                 new EventLog(drone, "test", 100);
         eventLogRepository.save(eventLog);
